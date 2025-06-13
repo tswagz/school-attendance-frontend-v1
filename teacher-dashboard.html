@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Attendance System - Teacher Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>📚 Teacher Dashboard</h1>
+      <p>Create and manage course attendance</p>
+    </header>
+
+    <nav class="navigation">
+      <a href="main-index.html" class="nav-link">Home</a>
+      <a href="teacher-dashboard.html" class="nav-link active">Teacher Dashboard</a>
+      <a href="attendance-form.html" class="nav-link">Student Dashboard</a>
+    </nav>
+
+    <div class="dashboard-content">
+      <div class="card">
+        <h2>Create New Attendance Session</h2>
+        
+        <form id="attendance-form" class="form">
+          <div class="form-group">
+            <label for="course-select">Select Course:</label>
+            <select id="course-select" required>
+              <option value="">Choose a course...</option>
+              <option value="CSC101">CSC 101 - Introduction to Computer Science</option>
+              <option value="MAT201">MAT 201 - Calculus II</option>
+              <option value="ECE301">ECE 301 - Digital Electronics</option>
+              <option value="ENG102">ENG 102 - Technical Writing</option>
+              <option value="PHY205">PHY 205 - Modern Physics</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="day-input">Day Number:</label>
+            <input type="text" id="day-input" placeholder="e.g., Day 01, Day 02" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Create Attendance Session</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Active Attendance Sessions</h2>
+        <div id="active-sessions" class="sessions-list">
+          <!-- Active sessions will be displayed here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notification" class="notification hidden"></div>
+
+  <script>
+    // Mock courses data
+    const courses = {
+      'CSC101': 'CSC 101 - Introduction to Computer Science',
+      'MAT201': 'MAT 201 - Calculus II',
+      'ECE301': 'ECE 301 - Digital Electronics',
+      'ENG102': 'ENG 102 - Technical Writing',
+      'PHY205': 'PHY 205 - Modern Physics'
+    };
+
+    // Load active sessions from localStorage or initialize empty
+    let activeSessions = JSON.parse(localStorage.getItem('activeSessions')) || [];
+
+    // Handle form submission
+    document.getElementById('attendance-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const courseCode = document.getElementById('course-select').value;
+      const dayNumber = document.getElementById('day-input').value.trim();
+      
+      if (!courseCode || !dayNumber) {
+        showNotification('Please fill in all fields', 'error');
+        return;
+      }
+
+      // Check if session already exists
+      const existingSession = activeSessions.find(session => 
+        session.courseCode === courseCode && session.dayNumber === dayNumber
+      );
+
+      if (existingSession) {
+        showNotification('This attendance session already exists!', 'error');
+        return;
+      }
+
+      // Create new session
+      const newSession = {
+        id: Date.now(),
+        courseCode: courseCode,
+        courseName: courses[courseCode],
+        dayNumber: dayNumber,
+        status: 'active',
+        createdAt: new Date().toISOString()
+      };
+
+      activeSessions.push(newSession);
+      localStorage.setItem('activeSessions', JSON.stringify(activeSessions));
+      
+      showNotification('Attendance session created successfully!', 'success');
+      
+      // Reset form
+      document.getElementById('attendance-form').reset();
+      
+      // Update display
+      displayActiveSessions();
+    });
+
+    // Display active sessions
+    function displayActiveSessions() {
+      const container = document.getElementById('active-sessions');
+      
+      if (activeSessions.length === 0) {
+        container.innerHTML = '<p class="no-sessions">No active attendance sessions</p>';
+        return;
+      }
+
+      container.innerHTML = activeSessions.map(session => `
+        <div class="session-item">
+          <div class="session-info">
+            <h3>${session.courseName}</h3>
+            <p><strong>Day:</strong> ${session.dayNumber}</p>
+            <p><strong>Status:</strong> <span class="status ${session.status}">${session.status}</span></p>
+            <p><strong>Created:</strong> ${new Date(session.createdAt).toLocaleDateString()}</p>
+          </div>
+          <div class="session-actions">
+            <button class="btn btn-secondary" onclick="toggleSessionStatus(${session.id})">
+              ${session.status === 'active' ? 'Deactivate' : 'Activate'}
+            </button>
+            <button class="btn btn-danger" onclick="deleteSession(${session.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Toggle session status
+    function toggleSessionStatus(sessionId) {
+      const session = activeSessions.find(s => s.id === sessionId);
+      if (session) {
+        session.status = session.status === 'active' ? 'inactive' : 'active';
+        localStorage.setItem('activeSessions', JSON.stringify(activeSessions));
+        displayActiveSessions();
+        showNotification(`Session ${session.status === 'active' ? 'activated' : 'deactivated'}`, 'success');
+      }
+    }
+
+    // Delete session
+    function deleteSession(sessionId) {
+      if (confirm('Are you sure you want to delete this session?')) {
+        activeSessions = activeSessions.filter(s => s.id !== sessionId);
+        localStorage.setItem('activeSessions', JSON.stringify(activeSessions));
+        displayActiveSessions();
+        showNotification('Session deleted successfully', 'success');
+      }
+    }
+
+    // Show notification
+    function showNotification(message, type = 'info') {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.classList.remove('hidden');
+      
+      setTimeout(() => {
+        notification.classList.add('hidden');
+      }, 3000);
+    }
+
+    // Initialize page
+    displayActiveSessions();
+  </script>
+</body>
+</html>

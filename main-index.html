@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Attendance System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>📚 School Attendance System</h1>
+      <p>Select your role to access the appropriate dashboard</p>
+    </header>
+
+    <div class="dashboard-content">
+      <div class="role-selection">
+        <div class="role-card">
+          <div class="role-icon">👨‍🏫</div>
+          <h2>Teacher / Course Rep</h2>
+          <p>Create and manage attendance sessions for your courses</p>
+          <a href="teacher-dashboard.html" class="btn btn-primary">Access Teacher Dashboard</a>
+        </div>
+
+        <div class="role-card">
+          <div class="role-icon">🎓</div>
+          <h2>Student</h2>
+          <p>View and sign attendance for your enrolled courses</p>
+          <a href="student-dashboard.html" class="btn btn-primary">Access Student Dashboard</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📋 System Features</h2>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>🎯 Easy Attendance Creation</h3>
+            <p>Teachers can quickly create attendance sessions for any course and day</p>
+          </div>
+          <div class="feature-item">
+            <h3>📱 Student Self Sign-in</h3>
+            <p>Students can easily mark their attendance with a single click</p>
+          </div>
+          <div class="feature-item">
+            <h3>💾 Local Storage</h3>
+            <p>All data is stored locally in your browser for testing purposes</p>
+          </div>
+          <div class="feature-item">
+            <h3>📊 Real-time Updates</h3>
+            <p>Attendance status updates instantly across all views</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📚 Mock Courses Available</h2>
+        <div class="courses-grid">
+          <div class="course-item">CSC 101 - Introduction to Computer Science</div>
+          <div class="course-item">MAT 201 - Calculus II</div>
+          <div class="course-item">ECE 301 - Digital Electronics</div>
+          <div class="course-item">ENG 102 - Technical Writing</div>
+          <div class="course-item">PHY 205 - Modern Physics</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .role-selection {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .role-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .role-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .role-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .role-card h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .role-card p {
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .role-card .btn {
+      background: white;
+      color: #667eea;
+      border: none;
+      font-weight: 600;
+    }
+
+    .role-card .btn:hover {
+      background: #f8f9fa;
+      transform: translateY(-2px);
+    }
+
+    .features-grid,
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .feature-item {
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .feature-item h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .feature-item p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .course-item {
+      padding: 1rem;
+      background: #e9ecef;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      color: #495057;
+    }
+
+    @media (max-width: 768px) {
+      .role-selection {
+        grid-template-columns: 1fr;
+      }
+      
+      .features-grid,
+      .courses-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</body>
+</html>

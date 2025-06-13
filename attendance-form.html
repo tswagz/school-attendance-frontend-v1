@@ -1,13 +1,193 @@
-<!-- Tertiary Institution Attendance Form -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Attendance</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Attendance System - Student Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>🎓 Student Dashboard</h1>
+      <p>Mark your attendance for active sessions</p>
+    </header>
+
+    <nav class="navigation">
+      <a href="main-index.html" class="nav-link">Home</a>
+      <a href="teacher-dashboard.html" class="nav-link">Teacher Dashboard</a>
+      <a href="attendance-form.html" class="nav-link active">Student Dashboard</a>
+    </nav>
+
+    <div class="student-info-card">
+      <h3>Welcome, <span id="student-name">John Doe</span></h3>
+      <p>Student ID: <strong id="student-id">STU2024001</strong></p>
+    </div>
+
+    <div class="dashboard-content">
+      <div class="card">
+        <h2>Active Attendance Sessions</h2>
+        <div id="active-attendance-list" class="attendance-list">
+          <!-- Active attendance sessions will be displayed here -->
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Your Attendance History</h2>
+        <div id="attendance-history" class="history-list">
+          <!-- Attendance history will be displayed here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notification" class="notification hidden"></div>
+
+  <script>
+    // Mock student data
+    const studentData = {
+      id: 'STU2024001',
+      name: 'John Doe',
+      courses: ['CSC101', 'MAT201', 'ECE301', 'ENG102'] // Enrolled courses
+    };
+
+    // Load attendance history from localStorage
+    let attendanceHistory = JSON.parse(localStorage.getItem('attendanceHistory')) || [];
+
+    // Update student info
+    document.getElementById('student-name').textContent = studentData.name;
+    document.getElementById('student-id').textContent = studentData.id;
+
+    // Display active attendance sessions
+    function displayActiveAttendance() {
+      const activeSessions = JSON.parse(localStorage.getItem('activeSessions')) || [];
+      const container = document.getElementById('active-attendance-list');
+      
+      // Filter sessions for courses the student is enrolled in and that are active
+      const studentSessions = activeSessions.filter(session => 
+        studentData.courses.includes(session.courseCode) && session.status === 'active'
+      );
+
+      if (studentSessions.length === 0) {
+        container.innerHTML = '<p class="no-sessions">No active attendance sessions for your courses</p>';
+        return;
+      }
+
+      container.innerHTML = studentSessions.map(session => {
+        const sessionKey = `${session.courseCode}_${session.dayNumber}`;
+        const isSigned = attendanceHistory.some(record => 
+          record.sessionKey === sessionKey && record.studentId === studentData.id
+        );
+
+        return `
+          <div class="attendance-item">
+            <div class="attendance-info">
+              <h3>${session.courseName}</h3>
+              <p><strong>Day:</strong> ${session.dayNumber}</p>
+              <p><strong>Created:</strong> ${new Date(session.createdAt).toLocaleDateString()}</p>
+            </div>
+            <div class="attendance-action">
+              <button 
+                class="btn ${isSigned ? 'btn-signed' : 'btn-primary'}" 
+                onclick="signAttendance('${session.courseCode}', '${session.dayNumber}', '${session.courseName}')"
+                ${isSigned ? 'disabled' : ''}>
+                ${isSigned ? '✓ Signed' : 'Sign Attendance'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Sign attendance
+    function signAttendance(courseCode, dayNumber, courseName) {
+      const sessionKey = `${courseCode}_${dayNumber}`;
+      
+      // Check if already signed
+      const alreadySigned = attendanceHistory.some(record => 
+        record.sessionKey === sessionKey && record.studentId === studentData.id
+      );
+
+      if (alreadySigned) {
+        showNotification('You have already signed for this session!', 'error');
+        return;
+      }
+
+      // Add to attendance history
+      const attendanceRecord = {
+        sessionKey: sessionKey,
+        studentId: studentData.id,
+        studentName: studentData.name,
+        courseCode: courseCode,
+        courseName: courseName,
+        dayNumber: dayNumber,
+        signedAt: new Date().toISOString(),
+        status: 'present'
+      };
+
+      attendanceHistory.push(attendanceRecord);
+      localStorage.setItem('attendanceHistory', JSON.stringify(attendanceHistory));
+
+      showNotification('You have successfully signed in!', 'success');
+      
+      // Refresh displays
+      displayActiveAttendance();
+      displayAttendanceHistory();
+    }
+
+    // Display attendance history
+    function displayAttendanceHistory() {
+      const container = document.getElementById('attendance-history');
+      const studentHistory = attendanceHistory.filter(record => record.studentId === studentData.id);
+
+      if (studentHistory.length === 0) {
+        container.innerHTML = '<p class="no-sessions">No attendance history</p>';
+        return;
+      }
+
+      // Sort by most recent first
+      studentHistory.sort((a, b) => new Date(b.signedAt) - new Date(a.signedAt));
+
+      container.innerHTML = studentHistory.map(record => `
+        <div class="history-item">
+          <div class="history-info">
+            <h4>${record.courseName}</h4>
+            <p><strong>Day:</strong> ${record.dayNumber}</p>
+            <p><strong>Signed:</strong> ${new Date(record.signedAt).toLocaleString()}</p>
+            <p><strong>Status:</strong> <span class="status present">${record.status}</span></p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Show notification
+    function showNotification(message, type = 'info') {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.classList.remove('hidden');
+      
+      setTimeout(() => {
+        notification.classList.add('hidden');
+      }, 3000);
+    }
+
+    // Auto-refresh active attendance every 30 seconds
+    function autoRefresh() {
+      displayActiveAttendance();
+    }
+
+    // Initialize page
+    displayActiveAttendance();
+    displayAttendanceHistory();
+
+    // Set up auto-refresh
+    setInterval(autoRefresh, 30000); // Refresh every 30 seconds
+  </script>
+</body>
+</html>
     <style>
         body {
             background: #f8f9fa;
