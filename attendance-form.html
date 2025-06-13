@@ -1,0 +1,324 @@
+<!-- Tertiary Institution Attendance Form -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .attendance-form-container {
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 2rem 2.5rem;
+            margin-top: 2.5rem;
+            max-width: 900px;
+        }
+
+        .attendance-table th,
+        .attendance-table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .attendance-table input[type="radio"] {
+            transform: scale(1.2);
+        }
+
+        .attendance-table input[type="text"] {
+            min-width: 100px;
+        }
+
+        .form-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-title i {
+            color: #0d6efd;
+            font-size: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-group {
+            gap: 1rem;
+        }
+
+        .filter-section {
+            background: #f1f3f5;
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .attendance-table .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.5rem;
+        }
+
+        .attendance-table .student-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .attendance-table td.status-cell {
+            min-width: 120px;
+        }
+
+        .attendance-table td input[type="radio"]:hover {
+            outline: 2px solid #0d6efd;
+        }
+
+        .attendance-table td input[type="text"] {
+            min-width: 120px;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .summary-section {
+            background: #e9ecef;
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container d-flex justify-content-center">
+        <div class="attendance-form-container w-100">
+            <div class="form-title">
+                <i class="fas fa-calendar-check"></i>
+                <h2 class="mb-0">Mark Attendance</h2>
+            </div>
+            <!-- Advanced Filter Section -->
+            <div class="filter-section row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Faculty</label>
+                    <select class="form-select">
+                        <option>Science</option>
+                        <option>Engineering</option>
+                        <option>Arts</option>
+                        <option>Social Sciences</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Department</label>
+                    <select class="form-select">
+                        <option>Computer Science</option>
+                        <option>Electrical Engineering</option>
+                        <option>English</option>
+                        <option>Economics</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Level</label>
+                    <select class="form-select">
+                        <option>100</option>
+                        <option>200</option>
+                        <option>300</option>
+                        <option>400</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Course</label>
+                    <select class="form-select">
+                        <option>CSC 301</option>
+                        <option>ENG 201</option>
+                        <option>MTH 102</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" value="2025-06-13">
+                </div>
+            </div>
+            <form id="attendance-form">
+                <div class="table-responsive">
+                    <table class="table table-bordered attendance-table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Student</th>
+                                <th>Matric No.</th>
+                                <th class="status-cell">Status</th>
+                                <th>Note</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <div class="student-info">
+                                        <img src="https://randomuser.me/api/portraits/women/1.jpg" class="avatar" alt="Alice James">
+                                        Alice James
+                                    </div>
+                                </td>
+                                <td>CSC/2021/001</td>
+                                <td class="status-cell">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[1][status]" value="present" id="present1">
+                                        <label class="form-check-label" for="present1">Present</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[1][status]" value="absent" id="absent1">
+                                        <label class="form-check-label" for="absent1">Absent</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[1][status]" value="late" id="late1">
+                                        <label class="form-check-label" for="late1">Late</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[1][status]" value="excused" id="excused1">
+                                        <label class="form-check-label" for="excused1">Excused</label>
+                                    </div>
+                                </td>
+                                <td><input type="text" name="attendance[1][note]" class="form-control" placeholder="Optional note"></td>
+                                <td class="table-actions">
+                                    <button type="button" class="btn btn-outline-info btn-sm" title="View Profile"><i class="fas fa-user"></i></button>
+                                    <button type="button" class="btn btn-outline-warning btn-sm" title="Send Message"><i class="fas fa-envelope"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    <div class="student-info">
+                                        <img src="https://randomuser.me/api/portraits/men/2.jpg" class="avatar" alt="John Smith">
+                                        John Smith
+                                    </div>
+                                </td>
+                                <td>CSC/2021/002</td>
+                                <td class="status-cell">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[2][status]" value="present" id="present2">
+                                        <label class="form-check-label" for="present2">Present</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[2][status]" value="absent" id="absent2">
+                                        <label class="form-check-label" for="absent2">Absent</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[2][status]" value="late" id="late2">
+                                        <label class="form-check-label" for="late2">Late</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[2][status]" value="excused" id="excused2">
+                                        <label class="form-check-label" for="excused2">Excused</label>
+                                    </div>
+                                </td>
+                                <td><input type="text" name="attendance[2][note]" class="form-control" placeholder="Optional note"></td>
+                                <td class="table-actions">
+                                    <button type="button" class="btn btn-outline-info btn-sm" title="View Profile"><i class="fas fa-user"></i></button>
+                                    <button type="button" class="btn btn-outline-warning btn-sm" title="Send Message"><i class="fas fa-envelope"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    <div class="student-info">
+                                        <img src="https://randomuser.me/api/portraits/women/3.jpg" class="avatar" alt="Fatima Bello">
+                                        Fatima Bello
+                                    </div>
+                                </td>
+                                <td>CSC/2021/003</td>
+                                <td class="status-cell">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[3][status]" value="present" id="present3">
+                                        <label class="form-check-label" for="present3">Present</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[3][status]" value="absent" id="absent3">
+                                        <label class="form-check-label" for="absent3">Absent</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[3][status]" value="late" id="late3">
+                                        <label class="form-check-label" for="late3">Late</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="attendance[3][status]" value="excused" id="excused3">
+                                        <label class="form-check-label" for="excused3">Excused</label>
+                                    </div>
+                                </td>
+                                <td><input type="text" name="attendance[3][note]" class="form-control" placeholder="Optional note"></td>
+                                <td class="table-actions">
+                                    <button type="button" class="btn btn-outline-info btn-sm" title="View Profile"><i class="fas fa-user"></i></button>
+                                    <button type="button" class="btn btn-outline-warning btn-sm" title="Send Message"><i class="fas fa-envelope"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-end btn-group mt-3">
+                    <button type="reset" class="btn btn-outline-secondary"><i class="fas fa-undo"></i> Reset</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Submit Attendance</button>
+                </div>
+            </form>
+            <!-- Attendance Summary Section -->
+            <div class="summary-section mt-4">
+                <h5>Attendance Summary</h5>
+                <div class="row text-center">
+                    <div class="col">
+                        <span class="badge bg-success">Present: 0</span>
+                    </div>
+                    <div class="col">
+                        <span class="badge bg-danger">Absent: 0</span>
+                    </div>
+                    <div class="col">
+                        <span class="badge bg-warning text-dark">Late: 0</span>
+                    </div>
+                    <div class="col">
+                        <span class="badge bg-info text-dark">Excused: 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Live attendance summary update
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('attendance-form');
+            const summary = {
+                present: 0,
+                absent: 0,
+                late: 0,
+                excused: 0
+            };
+            function updateSummary() {
+                summary.present = summary.absent = summary.late = summary.excused = 0;
+                const radios = form.querySelectorAll('input[type="radio"]:checked');
+                radios.forEach(radio => {
+                    if (summary[radio.value] !== undefined) summary[radio.value]++;
+                });
+                document.querySelector('.badge.bg-success').textContent = `Present: ${summary.present}`;
+                document.querySelector('.badge.bg-danger').textContent = `Absent: ${summary.absent}`;
+                document.querySelector('.badge.bg-warning').textContent = `Late: ${summary.late}`;
+                document.querySelector('.badge.bg-info').textContent = `Excused: ${summary.excused}`;
+            }
+            form.addEventListener('change', updateSummary);
+            updateSummary();
+        });
+    </script>
+</body>
+
+</html>
